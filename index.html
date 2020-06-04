@@ -184,7 +184,7 @@
 <script>
   var fireballSize = 22;
 
-  var getFireballSpeed = function(isWindFromLeft) {
+  function getFireballSpeed(isWindFromLeft) {
     if (isWindFromLeft) {
       return 5;
     }
@@ -194,15 +194,15 @@
   var wizardSpeed = 3;
   var wizardWidth = 70;
 
-  var getWizardHeight = function() {
+  function getWizardHeight() {
     return wizardWidth * 1.337;
   }
 
-  var getWizardX = function(gameViewportWidth) {
+  function getWizardX(gameViewportWidth) {
     return (gameViewportWidth - wizardWidth) / 2;
   }
 
-  var getWizardY = function(gameViewportHeight) {
+  function getWizardY(gameViewportHeight) {
     return gameViewportHeight / 3;
   }
 </script>
