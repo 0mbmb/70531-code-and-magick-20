@@ -11,7 +11,7 @@ var CLOUD_SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)';
 var CLOUD_SHADOW_OFFSET = 10;
 
 var TEXT_OFFSET = 20;
-var WINNING_MESSAGE = ['Ура! Вы победили!', 'Список результатов']; // ???
+var WINNING_MESSAGES = ['Ура! Вы победили!', 'Список результатов'];
 
 var MAX_GRAPH_HEIGHT = 150;
 var GRAPH_WIDTH = 40;
@@ -41,9 +41,27 @@ function displayWinningMessage(ctx) {
   ctx.fillStyle = MAIN_FONT_COLOR;
   ctx.font = MAIN_FONT;
   ctx.textBaseline = 'top';
-  for (var i = 0; i < WINNING_MESSAGE.length; i++) {
-    ctx.fillText(WINNING_MESSAGE[i], CLOUD_XY[0] + TEXT_OFFSET, CLOUD_XY[1] + TEXT_OFFSET + TEXT_OFFSET * i);
+  for (var i = 0; i < WINNING_MESSAGES.length; i++) {
+    ctx.fillText(WINNING_MESSAGES[i], CLOUD_XY[0] + TEXT_OFFSET, CLOUD_XY[1] + TEXT_OFFSET + TEXT_OFFSET * i);
   }
+}
+
+function getCompetitorColor() {
+  return 'hsl(240, ' + Math.random() * 100 + '%, 50%)';
+}
+
+function renderSingleGraph(ctx, playerName, playerTime, graphStartOffset, graphHeight) {
+  ctx.fillStyle = MAIN_FONT_COLOR;
+  ctx.fillText(playerName, CLOUD_XY[0] + TEXT_OFFSET + graphStartOffset, CLOUD_XY[1] + CLOUD_HEIGHT - TEXT_OFFSET); // player name
+
+  ctx.fillText(Math.round(playerTime), CLOUD_XY[0] + TEXT_OFFSET + graphStartOffset, CLOUD_XY[1] + CLOUD_HEIGHT - TEXT_OFFSET * 3 - graphHeight); // player time
+
+  ctx.fillStyle = getCompetitorColor();
+
+  if (playerName === PLAYER_NAME) {
+    ctx.fillStyle = PLAYER_COLOR;
+  }
+  ctx.fillRect(CLOUD_XY[0] + TEXT_OFFSET + graphStartOffset, CLOUD_XY[1] + CLOUD_HEIGHT - TEXT_OFFSET * 2, GRAPH_WIDTH, -graphHeight); // player graph
 }
 
 window.renderStatistics = function (ctx, players, times) {
@@ -51,16 +69,6 @@ window.renderStatistics = function (ctx, players, times) {
   displayWinningMessage(ctx);
 
   for (var i = 0; i < players.length; i++) {
-    ctx.fillStyle = MAIN_FONT_COLOR;
-    ctx.fillText(players[i], CLOUD_XY[0] + TEXT_OFFSET + (GRAPH_WIDTH + GRAPH_GAP) * i, CLOUD_XY[1] + CLOUD_HEIGHT - TEXT_OFFSET);
-
-    ctx.fillText(Math.round(times[i]), CLOUD_XY[0] + TEXT_OFFSET + (GRAPH_WIDTH + GRAPH_GAP) * i, CLOUD_XY[1] + CLOUD_HEIGHT - TEXT_OFFSET * 3 - MAX_GRAPH_HEIGHT * times[i] / getMaxArrayElement(times));
-
-    ctx.fillStyle = 'hsl(240, ' + Math.random() * 100 + '%, 50%)'; // ???
-
-    if (players[i] === PLAYER_NAME) {
-      ctx.fillStyle = PLAYER_COLOR;
-    }
-    ctx.fillRect(CLOUD_XY[0] + TEXT_OFFSET + (GRAPH_WIDTH + GRAPH_GAP) * i, CLOUD_XY[1] + CLOUD_HEIGHT - TEXT_OFFSET * 2, GRAPH_WIDTH, -MAX_GRAPH_HEIGHT * times[i] / getMaxArrayElement(times));
+    renderSingleGraph(ctx, players[i], times[i], (GRAPH_WIDTH + GRAPH_GAP) * i, MAX_GRAPH_HEIGHT * times[i] / getMaxArrayElement(times));
   }
 };
