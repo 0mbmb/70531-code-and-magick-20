@@ -14,10 +14,6 @@ var setupClose = setupWindow.querySelector('.setup-close');
 
 var setupName = setupWindow.querySelector('.setup-user-name');
 
-// последующие 6 элементов находятся в более глубокой обертке (setup-player),
-// чем окно настроек (setup), в котором я сейчас провожу поиск этих элементов.
-// будет ли лучше, если я сначала найду setup-player, и потом буду
-// искать эти элементы там?
 var setupCoatInput = setupWindow.querySelector('input[name=coat-color]');
 var setupCoat = setupWindow.querySelector('.setup-wizard .wizard-coat');
 var setupEyesInput = setupWindow.querySelector('input[name=eyes-color]');
@@ -27,14 +23,8 @@ var setupFireball = setupWindow.querySelector('.setup-fireball-wrap');
 
 var wizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
 
-// нужно ли было для этого писать отдельную функцию
-// или есть какое-то стандартное свойство для проверки
-// находится ли элемент в фокусе?
 function isElementFocused(element) {
-  if (document.activeElement === element) {
-    return true;
-  }
-  return false;
+  return document.activeElement === element;
 }
 
 function removeHidden(selector) {
@@ -46,14 +36,14 @@ function getRandomFromArray(array) {
 }
 
 function onSetupEscapePress(evt) {
-  if (evt.keyCode === 27 && !isElementFocused(setupName)) {
+  if (evt.key === 'Escape' && !isElementFocused(setupName)) {
     evt.preventDefault();
     closeSetupWindow();
   }
 }
 
 function onSetupCloseEnterPress(evt) {
-  if (evt.keyCode === 13) {
+  if (evt.key === 'Enter') {
     closeSetupWindow();
   }
 }
@@ -90,10 +80,6 @@ function closeSetupWindow() {
   setupWindow.classList.add('hidden');
   document.removeEventListener('keydown', onSetupEscapePress);
 
-  // следующие обработчики я удаляю после закрытия окна настроек,
-  // но судя по Event Listener в Хроме, если убрать это удаление,
-  // то эти обработчики и так не дублируются после открытия-закрытия окна,
-  // т.е. как будто бы удаляются сами. тогда нужно ли их удалять?
   setupClose.removeEventListener('click', closeSetupWindow);
   setupClose.removeEventListener('keydown', onSetupCloseEnterPress);
   setupCoat.removeEventListener('click', onCoatClick);
@@ -137,7 +123,7 @@ removeHidden('.setup-similar');
 
 setupOpen.addEventListener('click', openSetupWindow);
 setupOpen.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === 13) {
+  if (evt.key === 'Enter') {
     evt.preventDefault();
     openSetupWindow();
   }
