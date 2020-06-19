@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   var NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
   var SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
   var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
@@ -63,30 +64,6 @@
   function onFireballClick() {
     onWizardItemClick(setupFireball, setupFireballInput, FIREBALL_COLORS);
   }
-
-  // в демонстрации авторы предлагают объявить функцию onWizardItemClick следующим
-  // образом:
-  // function onWizardItemClick(itemElement, itemInput, colorOptions) {
-  //   itemElement.addEventListener('click', function () {
-  //     var newColor = window.util.getRandomFromArray(colorOptions);
-  //     itemInput.value = newColor;
-  //     if (itemElement.tagName === 'DIV') {
-  //       itemElement.style.backgroundColor = newColor;
-  //     } else if (itemElement.tagName === 'use') {
-  //       itemElement.style.fill = newColor;
-  //     }
-  //   });
-  // }
-
-  // и вызывать вот таким, т.е. делать универсальную функцию с изменением
-  // цветов и навешиванием обработчика события. как тогда удалять потом
-  // этот обработчик события и чем это решение лучше того, что я сделал?
-  // onWizardItemClick(setupCoat, setupCoatInput, COAT_COLORS);
-
-  // var setupDefaultCoord = {
-  //   x: setupWindow.offsetLeft,
-  //   y: setupWindow.offsetTop
-  // };
 
   function moveSetupToDefault() {
     setupWindow.style.left = SETUP_DEFAULT_COORD[0];

@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   var setupWindow = document.querySelector('.setup');
   var setupUpload = setupWindow.querySelector('.upload');
 

@@ -64,4 +64,5 @@
       renderSingleGraph(ctx, players[i], times[i], (GRAPH_WIDTH + GRAPH_GAP) * i, MAX_GRAPH_HEIGHT * times[i] / window.util.getMaxArrayElement(times));
     }
   };
+
 })();
