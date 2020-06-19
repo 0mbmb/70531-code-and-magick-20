@@ -9,6 +9,11 @@
 
   var NUMBER_SIMILAR_WIZARDS = 4;
 
+  // не смог придумать как найти дефолтное положение окна настроек,
+  // когда у него стоит display: none. быстро убрать класс hidden, записать координаты
+  // и вернуть класс?
+  var SETUP_DEFAULT_COORD = ['50%', '80'];
+
   var setupOpen = document.querySelector('.setup-open');
   var setupWindow = document.querySelector('.setup');
   var setupClose = setupWindow.querySelector('.setup-close');
@@ -83,11 +88,9 @@
   //   y: setupWindow.offsetTop
   // };
 
-  var setupDefaultCoord = ['50%', '80'];
-
   function moveSetupToDefault() {
-    setupWindow.style.left = setupDefaultCoord[0];
-    setupWindow.style.top = setupDefaultCoord[1] + 'px';
+    setupWindow.style.left = SETUP_DEFAULT_COORD[0];
+    setupWindow.style.top = SETUP_DEFAULT_COORD[1] + 'px';
   }
 
   function openSetupWindow() {
