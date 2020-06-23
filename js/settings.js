@@ -16,7 +16,7 @@
     return 2;
   };
   window.getWizardHeight = function () {
-    return window.wizardWidth * 1.337;
+    return WIZARD_WIDTH * 1.337;
   };
   window.getWizardX = function (gameViewportWidth) {
     return (gameViewportWidth - window.wizardWidth) / 2;

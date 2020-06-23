@@ -10,11 +10,6 @@
 
   var NUMBER_SIMILAR_WIZARDS = 4;
 
-  // не смог придумать как найти дефолтное положение окна настроек,
-  // когда у него стоит display: none. быстро убрать класс hidden, записать координаты
-  // и вернуть класс?
-  var SETUP_DEFAULT_COORD = ['50%', '80'];
-
   var setupOpen = document.querySelector('.setup-open');
   var setupWindow = document.querySelector('.setup');
   var setupClose = setupWindow.querySelector('.setup-close');
@@ -65,14 +60,32 @@
     onWizardItemClick(setupFireball, setupFireballInput, FIREBALL_COLORS);
   }
 
-  function moveSetupToDefault() {
-    setupWindow.style.left = SETUP_DEFAULT_COORD[0];
-    setupWindow.style.top = SETUP_DEFAULT_COORD[1] + 'px';
+  function getSetupDefaultCoords() {
+    var setupStyle = getComputedStyle(setupWindow);
+    return {
+      top: setupStyle.top,
+      left: setupStyle.left
+    };
+  }
+
+  function moveSetupToDefault(leftCoord, topCoord) {
+    setupWindow.style.left = leftCoord;
+    setupWindow.style.top = topCoord;
   }
 
   function openSetupWindow() {
     setupWindow.classList.remove('hidden');
-    moveSetupToDefault();
+
+    // здесь я проверяю запускалась ли функция до этого, и если нет, то записываю
+    // первоначальные координаты в объект setupWindow. это нормальное решение?
+    if (!openSetupWindow.didrun) {
+      var setupDefaultCoords = getSetupDefaultCoords();
+      setupWindow.defaultLeft = setupDefaultCoords.left;
+      setupWindow.defaultTop = setupDefaultCoords.top;
+      openSetupWindow.didrun = true;
+    }
+    moveSetupToDefault(setupWindow.defaultLeft, setupWindow.defaultTop);
+
     document.addEventListener('keydown', onSetupEscapePress);
     setupClose.addEventListener('click', closeSetupWindow);
     setupClose.addEventListener('keydown', onSetupCloseEnterPress);
