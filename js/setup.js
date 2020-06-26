@@ -2,27 +2,12 @@
 
 (function () {
 
-  var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
-  var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
-  var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
-
-  var NUMBER_SIMILAR_WIZARDS = 4;
-
   var setupOpen = document.querySelector('.setup-open');
   var setupWindow = document.querySelector('.setup');
   var setupClose = setupWindow.querySelector('.setup-close');
   var setupForm = setupWindow.querySelector('.setup-wizard-form');
 
   var setupName = setupWindow.querySelector('.setup-user-name');
-
-  var setupCoatInput = setupWindow.querySelector('input[name=coat-color]');
-  var setupCoat = setupWindow.querySelector('.setup-wizard .wizard-coat');
-  var setupEyesInput = setupWindow.querySelector('input[name=eyes-color]');
-  var setupEyes = setupWindow.querySelector('.setup-wizard .wizard-eyes');
-  var setupFireballInput = setupWindow.querySelector('input[name=fireball-color]');
-  var setupFireball = setupWindow.querySelector('.setup-fireball-wrap');
-
-  var wizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
 
   function onSetupEscapePress(evt) {
     if (evt.key === 'Escape' && !window.util.isElementFocused(setupName)) {
@@ -35,28 +20,6 @@
     if (evt.key === 'Enter') {
       closeSetupWindow();
     }
-  }
-
-  function onWizardItemClick(itemElement, itemInput, colorOptions) {
-    var newColor = window.util.getRandomFromArray(colorOptions);
-    itemInput.value = newColor;
-    if (itemElement.tagName === 'DIV') {
-      itemElement.style.backgroundColor = newColor;
-    } else if (itemElement.tagName === 'use') {
-      itemElement.style.fill = newColor;
-    }
-  }
-
-  function onCoatClick() {
-    onWizardItemClick(setupCoat, setupCoatInput, COAT_COLORS);
-  }
-
-  function onEyesClick() {
-    onWizardItemClick(setupEyes, setupEyesInput, EYES_COLORS);
-  }
-
-  function onFireballClick() {
-    onWizardItemClick(setupFireball, setupFireballInput, FIREBALL_COLORS);
   }
 
   function getSetupDefaultCoords() {
@@ -82,6 +45,7 @@
       setupWindow.defaultLeft = setupDefaultCoords.left;
       setupWindow.defaultTop = setupDefaultCoords.top;
       openSetupWindow.didrun = true;
+      window.backend.load(onLoadSuccess, onLoadError);
     }
     moveSetupToDefault(setupWindow.defaultLeft, setupWindow.defaultTop);
 
@@ -91,9 +55,7 @@
 
     setupForm.addEventListener('submit', onFormSubmit);
 
-    setupCoat.addEventListener('click', onCoatClick);
-    setupEyes.addEventListener('click', onEyesClick);
-    setupFireball.addEventListener('click', onFireballClick);
+    window.wizard.onWizardEventListeners();
 
     setupOpen.removeEventListener('click', openSetupWindow);
   }
@@ -106,31 +68,17 @@
 
     setupClose.removeEventListener('click', closeSetupWindow);
     setupClose.removeEventListener('keydown', onSetupCloseEnterPress);
-    setupCoat.removeEventListener('click', onCoatClick);
-    setupEyes.removeEventListener('click', onEyesClick);
-    setupFireball.removeEventListener('click', onFireballClick);
+
+    window.wizard.removeWizardEventListeners();
 
     setupForm.removeEventListener('submit', onFormSubmit);
   }
 
-  function createSimilarWizardItem(wizardData) {
-    var wizard = wizardTemplate.cloneNode(true);
-    wizard.querySelector('.setup-similar-label').textContent = wizardData.name;
-    wizard.querySelector('.wizard-coat').style.fill = wizardData.coatColor ? wizardData.coatColor : wizardData.colorCoat;
-    wizard.querySelector('.wizard-eyes').style.fill = wizardData.eyesColor ? wizardData.eyesColor : wizardData.colorEyes;
-    return wizard;
-  }
-
-  function renderSimilarWizards(similarWizards) {
-    window.util.removeHidden('.setup-similar');
-
-    var similarWizardsList = document.querySelector('.setup-similar-list');
-    var wizardsFragment = document.createDocumentFragment();
-
-    for (var i = 0; i < NUMBER_SIMILAR_WIZARDS; i++) {
-      wizardsFragment.appendChild(createSimilarWizardItem(similarWizards[i]));
-    }
-    similarWizardsList.appendChild(wizardsFragment);
+  // ???
+  function onLoadSuccess(wizardsData) {
+    window.wizard.setWizards(wizardsData);
+    window.render.renderSimilarWizards(wizardsData);
+    window.wizard.updateWizards();
   }
 
   function onLoadError(errorMessage) {
@@ -150,8 +98,6 @@
     window.backend.save(formData, closeSetupWindow, onLoadError);
     evt.preventDefault();
   }
-
-  window.backend.load(renderSimilarWizards, onLoadError);
 
   setupOpen.addEventListener('click', openSetupWindow);
   setupOpen.addEventListener('keydown', function (evt) {
